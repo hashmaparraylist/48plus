@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Global String -->
+    <string name="app_name">48 Plus</string>
+    
+    <!-- Account List Activity -->
+    <string name="account_list_sub_title">请选择Google帐号</string>
+    
+    <!-- Account List Activity -->
+    <string name="main_sub_title">请选择成员</string>
+    
+    <!-- Group Name -->
+    <string name="akb48">AKB48</string>
+    <string name="ske48">SKE48</string>
+    <string name="nmb48">NMB48</string>
+    <string name="hkt48">HKT48</string>
+</resources>
