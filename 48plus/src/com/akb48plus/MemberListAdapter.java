@@ -1,12 +1,6 @@
 package com.akb48plus;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
-
-import com.google.api.services.plus.model.Person;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -17,6 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.akb48plus.common.image.ImageLoadTask;
+import com.akb48plus.common.image.Utils;
+import com.akb48plus.common.image.Utils.CacheBean;
+import com.google.api.services.plus.model.Person;
 
 public class MemberListAdapter extends ArrayAdapter<Person> {
     private static final String TAG = MemberListAdapter.class.getName();
@@ -50,18 +49,28 @@ public class MemberListAdapter extends ArrayAdapter<Person> {
             //Uri uri = Uri.parse(member.getImage().getUrl());
             ImageView imageview = (ImageView) view.findViewById(R.id.imgProfilePhoto);
             if (imageview != null) {
-                try {
-                    String url = member.getImage().getUrl();
-                    url = url.replaceAll("\\?sz\\=\\d+", "?sz=400");
-                    Log.d(TAG, "Profile photo: " + url);
-                    InputStream is = (new URL(url)).openStream();
-                    imageview.setImageDrawable(Drawable.createFromStream(is, "imgsrc.jpg"));
-                    Log.d(TAG, "Image has load");
-                } catch (MalformedURLException e) {
-                    Log.e(TAG,e.getMessage());
-                } catch (IOException e) {
-                    Log.e(TAG,e.getMessage());
+                String url = member.getImage().getUrl();
+                url = url.replaceAll("\\?sz\\=\\d+", "?sz=400");
+                Log.d(TAG, "Profile photo: " + url);
+                //InputStream is = (new URL(url)).openStream();
+                CacheBean image = Utils.imageCache.get(url);
+                if (null == image) {
+                    imageview.setImageResource(R.drawable.dummy);
+                    // Make a cache
+                    image = Utils.buildCacheBean();
+                    Utils.imageCache.put(url, image);
+                    ImageLoadTask loader = new ImageLoadTask(imageview);
+                    Log.d(TAG, "now caching image");
+                    loader.execute(url);
+                } else {
+                    Log.d(TAG, "hitting, set cache image");
+                    if (!image.isNotCaching()) {
+                        Log.d(TAG, "now set image");
+                        imageview.setImageDrawable(image.getImage());
+                    }
+                    
                 }
+                //Log.d(TAG, "Image has load");
             }
         }
         return view;
