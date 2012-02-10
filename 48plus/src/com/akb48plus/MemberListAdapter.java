@@ -47,6 +47,10 @@ public class MemberListAdapter extends ArrayAdapter<Person> {
             if (textView != null) {
                 textView.setText(member.getDisplayName());
             }
+            TextView textId = (TextView) view.findViewById(R.id.txtProfileId);
+            if (textId != null) {
+                textId.setText(member.getId());
+            }
             // Uri uri = Uri.parse(member.getImage().getUrl());
             ImageView imageview = (ImageView) view.findViewById(R.id.imgProfilePhoto);
             if (imageview != null) {
