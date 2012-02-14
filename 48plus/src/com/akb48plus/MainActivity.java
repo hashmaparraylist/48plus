@@ -19,7 +19,7 @@ import com.akb48plus.common.auth.AuthUtils;
 public class MainActivity extends android.app.TabActivity implements OnCheckedChangeListener {
 
     public static final String TAG = MainActivity.class.getName();
-    public static final String INTENT_MEMBER_SELECTED = "INTENT_MEMBER_SELECTED";
+    public static final String INTENT_GROUP_SELECTED = "INTENT_GROUP_SELECTED";
     
     private Intent akb48intent;
     private Intent ske48intent;
@@ -48,13 +48,13 @@ public class MainActivity extends android.app.TabActivity implements OnCheckedCh
 
         // Init Intent
         akb48intent = new Intent(this, ProfileListActivity.class);
-        akb48intent.putExtra(INTENT_MEMBER_SELECTED, Const.PREF_AKB_LIST_NAME);
+        akb48intent.putExtra(INTENT_GROUP_SELECTED, Const.PREF_AKB_LIST_NAME);
         ske48intent = new Intent(this, ProfileListActivity.class);
-        ske48intent.putExtra(INTENT_MEMBER_SELECTED, Const.PREF_SKE_LIST_NAME);
+        ske48intent.putExtra(INTENT_GROUP_SELECTED, Const.PREF_SKE_LIST_NAME);
         nmb48intent = new Intent(this, ProfileListActivity.class);
-        nmb48intent.putExtra(INTENT_MEMBER_SELECTED, Const.PREF_NMB_LIST_NAME);
+        nmb48intent.putExtra(INTENT_GROUP_SELECTED, Const.PREF_NMB_LIST_NAME);
         hkt48intent = new Intent(this, ProfileListActivity.class);
-        hkt48intent.putExtra(INTENT_MEMBER_SELECTED, Const.PREF_HKT_LIST_NAME);
+        hkt48intent.putExtra(INTENT_GROUP_SELECTED, Const.PREF_HKT_LIST_NAME);
         
         
         TabHost localTabHost = getTabHost();

@@ -36,9 +36,9 @@ public class PlusWrap {
         final SharedPreferences prefs = ctx.getSharedPreferences(
                 AuthUtils.PREF_NAME, 0);
         final String accessToken = prefs.getString("accessToken", null);
+        Log.d(TAG, "Plus Init AccessToken=" + accessToken);
         final GoogleAccessProtectedResource protectedResource = new GoogleAccessProtectedResource(
                 accessToken);
-        Log.d(TAG, "Plus Init");
         plus = Plus
                 .builder(HTTP_TRANSPORT, JSON_FACTORY)
                 .setApplicationName("302050057200.apps.googleusercontent.com")          // Application Name

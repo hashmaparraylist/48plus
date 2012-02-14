@@ -5,32 +5,21 @@
 
     <ImageView
         android:id="@+id/imgProfilePhoto"
-        android:layout_width="80dip"
-        android:layout_height="80dip"
-        android:src="@drawable/dummy" 
+        style="@style/PlusImage.People"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true" 
         android:contentDescription="@string/akb48"/>
     <TextView
         android:id="@+id/txtProfileName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
+        style="@style/TextView.Title"
         android:layout_toRightOf="@id/imgProfilePhoto"
-        android:textSize="20dip"
-        android:textColor="#000000"
 		android:layout_alignParentTop="true"
 		android:layout_centerHorizontal="true" />
    <TextView
        android:id="@+id/txtProfileId"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:text=""
+       style="@style/TextView.invisibility"
        android:layout_toRightOf="@id/imgProfilePhoto"
        android:layout_below="@id/txtProfileName"
-       android:textSize="20dip"
-       android:textColor="#000000"
-       android:visibility="gone"
        android:layout_centerHorizontal="true" />
     <ListView
         android:id="@+id/profileList"
