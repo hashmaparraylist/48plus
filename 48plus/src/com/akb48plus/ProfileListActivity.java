@@ -33,7 +33,9 @@ public class ProfileListActivity extends android.app.Activity {
     
     private ListView mListView;
     public final static String TAG = ProfileListActivity.class.getName();
-    public static final String INTENT_MEMBER_SELECTED= "INTENT_MEMBER_SELECTED";
+    public static final String INTENT_SELECTED_MEMBER_ID = "INTENT_SELECTED_MEMBER_ID";
+    public static final String INTENT_SELECTED_MEMBER_NAME = "INTENT_SELECTED_MEMBER_NAME";
+    
 
     /** Called when the activity is first created. */
     @Override
@@ -62,10 +64,13 @@ public class ProfileListActivity extends android.app.Activity {
                 Log.d(TAG, "onItemClick");
                 Log.d(TAG, "clieck member's name:" + ((TextView)view.findViewById(R.id.txtProfileName)).getText().toString());
                 Log.d(TAG, "clieck member's id:" + ((TextView)view.findViewById(R.id.txtProfileId)).getText().toString());
-                String str = ((TextView)view.findViewById(R.id.txtProfileId)).getText().toString();
-                Intent activites = new Intent(getApplicationContext(), ActivitiesListActivity.class);
-                activites.putExtra(INTENT_MEMBER_SELECTED, str);
-                getApplication().startActivity(activites);
+                String pid = ((TextView)view.findViewById(R.id.txtProfileId)).getText().toString();
+                String displayName = ((TextView)view.findViewById(R.id.txtProfileName)).getText().toString();
+                Intent activites = new Intent(ProfileListActivity.this, ActivitiesListActivity.class);
+                activites.putExtra(INTENT_SELECTED_MEMBER_ID, pid);
+                activites.putExtra(INTENT_SELECTED_MEMBER_NAME, displayName);
+                //activites.setFlags(Intent.Fla)
+                startActivity(activites);
             }
         });
         

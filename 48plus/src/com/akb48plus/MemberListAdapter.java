@@ -11,6 +11,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.akb48plus.common.Const;
+import com.akb48plus.common.Utils;
 import com.akb48plus.common.image.ImageLoader;
 
 import com.google.api.services.plus.model.Person;
@@ -40,8 +42,6 @@ public class MemberListAdapter extends ArrayAdapter<Person> {
 
         Person member = getItem(position);
         if (member != null) {
-            // LinearLayout profile = (LinearLayout)
-            // view.findViewById(R.id.profile);
             Log.d(TAG, "Profile name: " + member.getDisplayName());
             TextView textView = (TextView) view.findViewById(R.id.txtProfileName);
             if (textView != null) {
@@ -54,13 +54,10 @@ public class MemberListAdapter extends ArrayAdapter<Person> {
             // Uri uri = Uri.parse(member.getImage().getUrl());
             ImageView imageview = (ImageView) view.findViewById(R.id.imgProfilePhoto);
             if (imageview != null) {
-                String url = member.getImage().getUrl();
-                url = url.replaceAll("\\?sz\\=\\d+", "?sz=400");
-                Log.d(TAG, "Profile photo: " + url);
-                // InputStream is = (new URL(url)).openStream();
-                imageLoader.displayImage(url, imageview);
-
-                // Log.d(TAG, "Image has load");
+                Log.d(TAG, "Profile photo: " + member.getImage().getUrl());
+                imageLoader.displayImage(
+                        Utils.changePhotoSizeInUrl(member.getImage().getUrl(), Const.PHOTO_SIZE),
+                        imageview);
             }
         }
         return view;

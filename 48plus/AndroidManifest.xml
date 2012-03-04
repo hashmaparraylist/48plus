@@ -23,6 +23,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ProfileListActivity" />
+        <activity android:name=".ActivitiesListActivity" android:theme="@style/title"/>
+        <activity android:name=".CommentsListActivity" android:theme="@style/title"/>
         <activity android:name="com.akb48plus.common.auth.AccountListActivity" android:theme="@style/title" />
     </application>
 

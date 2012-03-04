@@ -4,25 +4,31 @@
     style="@style/list" >
     
     <TextView
-        android:id="@+id/txtProfileId"
+        android:id="@+id/txtActivityId"
         style="@style/TextView.invisibility" />
     <ImageView
         android:id="@+id/imgProfilePhoto"
         style="@style/PlusImage.People"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true" 
+        android:visibility="gone"
         android:contentDescription="@string/akb48"/>
     <TextView
         android:id="@+id/txtDisplayName"
         style="@style/TextView.Title"
+        android:visibility="gone"
         android:layout_toRightOf="@id/imgProfilePhoto"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
+    <!--
+        android:layout_toRightOf="@id/imgProfilePhoto"
+        android:layout_below="@id/txtDisplayName"
+         -->
     <TextView
         android:id="@+id/txtUpdDateTime"
         style="@style/TextView.Provider"
         android:layout_toRightOf="@id/imgProfilePhoto"
-        android:layout_below="@id/txtDisplayName"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
     <TextView
         android:id="@+id/txtContent"
@@ -35,6 +41,7 @@
         style="@style/PlusImage.Attachment"
         android:layout_toRightOf="@id/imgProfilePhoto"
         android:layout_below="@id/txtContent"
+        android:visibility="gone"
         android:contentDescription="@string/akb48"/>
     <RelativeLayout 
         android:id="@+id/shared"
@@ -49,6 +56,7 @@
             style="@style/PlusImage.People"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true" 
+            android:visibility="gone"
             android:contentDescription="@string/akb48"/>
         <TextView
             android:id="@+id/txtSharedDisplayName"
@@ -57,22 +65,17 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true" />
         <TextView
-            android:id="@+id/txtSharedUpdDateTime"
-            style="@style/TextView.Provider"
-            android:layout_toRightOf="@id/imgSharedProfile"
-            android:layout_below="@id/txtSharedDisplayName"
-            android:layout_centerHorizontal="true" />
-        <TextView
             android:id="@+id/txtSharedContent"
             style="@style/TextView.Activity"
             android:layout_toRightOf="@id/imgSharedProfile"
-            android:layout_below="@id/txtSharedUpdDateTime"
+            android:layout_below="@id/txtSharedDisplayName"
             android:layout_centerHorizontal="true" />
         <ImageView
             android:id="@+id/imgSharedAttach"
             style="@style/PlusImage.Attachment"
             android:layout_alignParentLeft="true"
             android:layout_toRightOf="@id/imgSharedProfile"
+            android:visibility="gone"
             android:layout_below="@id/txtSharedContent"
             android:contentDescription="@string/akb48"/>
     </RelativeLayout>

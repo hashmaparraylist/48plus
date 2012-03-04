@@ -80,4 +80,13 @@
 
     
     <!-- 评论的风格 -->
+    <style name="TextView.Commenter">
+        <item name="android:textSize">15dip</item>
+        <item name="android:textColor">#000000</item>
+    </style>
+    <style name="TextView.Comment">
+        <item name="android:textSize">13dip</item>
+        <item name="android:textColor">#000000</item>
+    </style>
+    
 </resources>
