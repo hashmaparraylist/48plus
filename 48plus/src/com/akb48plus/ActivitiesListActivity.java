@@ -56,7 +56,7 @@ public class ActivitiesListActivity extends android.app.Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d(TAG, "onItemClick");
-                String value = ((TextView)view.findViewById(R.id.txtProfileId)).getText().toString();
+                String value = ((TextView)view.findViewById(R.id.txtActivityId)).getText().toString();
                 String name = ((TextView) view.findViewById(R.id.txtDisplayName)).getText().toString();
                 Log.d(TAG, "clieck ActivityId's id:" + value);
                 Intent intent = new Intent(ActivitiesListActivity.this, CommentsListActivity.class);

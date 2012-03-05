@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -193,6 +194,9 @@ public class CommentsListActivity extends android.app.Activity {
                 }
 
                 if (feed != null) {
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mListView.getLayoutParams();
+                    params.addRule(RelativeLayout.BELOW, R.id.shared);
+                    mListView.setLayoutParams(params);
                     mListView.setAdapter(new CommentsArrayAdapter(getApplicationContext(), feed));
                 }
             }

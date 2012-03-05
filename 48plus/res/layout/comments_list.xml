@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="horizontal" 
-    style="@style/list" >
+    style="@style/comments" >
 
     <TextView
         android:id="@+id/txtDisplayName"
         style="@style/TextView.Commenter"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentTop="true" />
     <TextView
         android:id="@+id/txtContent"
         style="@style/TextView.Comment"
-        android:layout_below="@id/txtUpdDateTime"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@id/txtDisplayName" />
 </RelativeLayout>
