@@ -88,7 +88,8 @@ public class ActivityArrayAdapter extends ArrayAdapter<Activity> {
         Log.d(TAG, "GMT = " + updDateTime.toStringRfc3339());
         Log.d(TAG, "Local = " + localDateTime);
         txtUpdDateTime.setText(localDateTime);
-        
+        RelativeLayout shared = (RelativeLayout) view.findViewById(R.id.shared);
+        shared.setVisibility(View.GONE);
         // Google Plus 详细发表内容的对象
         ActivityObject object = activity.getPlusObject();
         
@@ -116,6 +117,7 @@ public class ActivityArrayAdapter extends ArrayAdapter<Activity> {
         ImageView imgSharedAttach = (ImageView) shared.findViewById(R.id.imgSharedAttach);
         
         shared.setVisibility(View.VISIBLE);
+        imgSharedProfile.setVisibility(View.VISIBLE);
         imageLoader.displayImage(
                 Utils.changePhotoSizeInUrl(object.getActor().getImage().getUrl(), Const.PHOTO_SIZE),
                 imgSharedProfile);
@@ -132,7 +134,7 @@ public class ActivityArrayAdapter extends ArrayAdapter<Activity> {
     private void handlePost(View view, ActivityObject object) {
         TextView txtContent = (TextView) view.findViewById(R.id.txtContent);
         ImageView imageAttach = (ImageView) view.findViewById(R.id.imgAttach);
-        
+        imageAttach.setVisibility(View.GONE);
         makeContent(object, txtContent, imageAttach);
     }
 
@@ -146,7 +148,7 @@ public class ActivityArrayAdapter extends ArrayAdapter<Activity> {
             ImageView imageAttach) {
         // 发表的正文
         String content = object.getContent();
-        
+        imageAttach.setVisibility(View.GONE);
         // 附件
         List<ActivityObjectAttachments> list = object.getAttachments();
         if ((null != list) && (0 < list.size())) {

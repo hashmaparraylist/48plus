@@ -10,17 +10,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.akb48plus.common.Const;
@@ -46,6 +48,7 @@ public class CommentsListActivity extends android.app.Activity {
     private static final String TAG = CommentsListActivity.class.getName();
     public ImageLoader imageLoader;
     private ListView mListView;
+    private View view;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,12 +66,16 @@ public class CommentsListActivity extends android.app.Activity {
         String activityId = intent.getExtras().getString(ActivitiesListActivity.INTENT_SELECTED_ACTIVITY);
         String memberName = intent.getExtras().getString(ProfileListActivity.INTENT_SELECTED_MEMBER_NAME);
         
-        setContentView(R.layout.activities_list);
+        setContentView(R.layout.comment);
+        final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        ScrollView main = (ScrollView)findViewById(R.id.main);
+        main.addView(inflater.inflate(R.layout.activities_list, null));
+        view = main.findViewById(R.id.activity);
         getWindow().setFeatureInt(android.view.Window.FEATURE_CUSTOM_TITLE, R.layout.title);
         TextView txtSubTitle = (TextView) findViewById(R.id.txtSubTitle);
         txtSubTitle.setText(memberName);
         
-        mListView = (ListView) findViewById(R.id.activityList);
+        mListView = (ListView) view.findViewById(R.id.activityList);
         
         AsyncTask<String, Void, List<Comment>> task = new AsyncTask<String, Void, List<Comment>>() {
             
@@ -157,22 +164,22 @@ public class CommentsListActivity extends android.app.Activity {
             protected void onPostExecute(List<Comment> feed) {
                 
                 // Activity ID
-                TextView txtActivityId = (TextView) findViewById(R.id.txtActivityId);
+                TextView txtActivityId = (TextView) view.findViewById(R.id.txtActivityId);
                 txtActivityId.setText(activity.getId());
                 
                 // 发表头像
-                ImageView imgProfilePhoto = (ImageView) findViewById(R.id.imgProfilePhoto);
+                ImageView imgProfilePhoto = (ImageView) view.findViewById(R.id.imgProfilePhoto);
                 imgProfilePhoto.setVisibility(View.VISIBLE);
                 imageLoader.displayImage(
                         Utils.changePhotoSizeInUrl(activity.getActor().getImage().getUrl(), Const.PHOTO_SIZE),
                         imgProfilePhoto);
                 
                 // 发表者
-                TextView txtDisplayName = (TextView) findViewById(R.id.txtDisplayName);
+                TextView txtDisplayName = (TextView) view.findViewById(R.id.txtDisplayName);
                 txtDisplayName.setText(activity.getActor().getDisplayName());
                 
                 // 发表时间
-                TextView txtUpdDateTime = (TextView) findViewById(R.id.txtUpdDateTime);
+                TextView txtUpdDateTime = (TextView) view.findViewById(R.id.txtUpdDateTime);
                 DateTime updDateTime = activity.getUpdated();
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'");
                 format.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -184,13 +191,14 @@ public class CommentsListActivity extends android.app.Activity {
                 
                 // Google Plus 详细发表内容的对象
                 ActivityObject object = activity.getPlusObject();
-                
+                RelativeLayout shared = (RelativeLayout) view.findViewById(R.id.shared);
+                shared.setVisibility(View.GONE);
                 if (Const.ACTIVITY_VERB_POST.equals(activity.getVerb())) {
-                    handlePost(CommentsListActivity.this, object);
+                    handlePost(view, object);
                 } else {
                     TextView txtContent = (TextView) findViewById(R.id.txtContent);
                     txtContent.setText(Html.fromHtml(activity.getAnnotation()));
-                    handleShare(CommentsListActivity.this, object);
+                    handleShare(view, object);
                 }
 
                 if (feed != null) {
@@ -206,7 +214,7 @@ public class CommentsListActivity extends android.app.Activity {
              * @param view
              * @param object
              */
-            private void handleShare(android.app.Activity view, ActivityObject object) {
+            private void handleShare(View view, ActivityObject object) {
                 RelativeLayout shared = (RelativeLayout) view.findViewById(R.id.shared);
                 ImageView imgSharedProfile = (ImageView) shared.findViewById(R.id.imgSharedProfile);
                 TextView txtSharedDisplayName = (TextView) shared.findViewById(R.id.txtSharedDisplayName);
@@ -214,6 +222,7 @@ public class CommentsListActivity extends android.app.Activity {
                 ImageView imgSharedAttach = (ImageView) shared.findViewById(R.id.imgSharedAttach);
                 
                 shared.setVisibility(View.VISIBLE);
+                imgSharedProfile.setVisibility(View.VISIBLE);
                 imageLoader.displayImage(
                         Utils.changePhotoSizeInUrl(object.getActor().getImage().getUrl(), Const.PHOTO_SIZE),
                         imgSharedProfile);
@@ -227,10 +236,10 @@ public class CommentsListActivity extends android.app.Activity {
              * @param view
              * @param object
              */
-            private void handlePost(android.app.Activity view, ActivityObject object) {
+            private void handlePost(View view, ActivityObject object) {
                 TextView txtContent = (TextView) view.findViewById(R.id.txtContent);
                 ImageView imageAttach = (ImageView) view.findViewById(R.id.imgAttach);
-                
+                imageAttach.setVisibility(View.GONE);
                 makeContent(object, txtContent, imageAttach);
             }
 
@@ -240,11 +249,11 @@ public class CommentsListActivity extends android.app.Activity {
              * @param txtContent
              * @param imageAttach
              */
-            private void makeContent(ActivityObject object, TextView txtContent,
+            public void makeContent(ActivityObject object, TextView txtContent,
                     ImageView imageAttach) {
                 // 发表的正文
                 String content = object.getContent();
-                
+                imageAttach.setVisibility(View.GONE);
                 // 附件
                 List<ActivityObjectAttachments> list = object.getAttachments();
                 if ((null != list) && (0 < list.size())) {
