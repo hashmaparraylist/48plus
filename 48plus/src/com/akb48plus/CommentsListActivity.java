@@ -19,7 +19,9 @@ import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -66,11 +68,8 @@ public class CommentsListActivity extends android.app.Activity {
         String activityId = intent.getExtras().getString(ActivitiesListActivity.INTENT_SELECTED_ACTIVITY);
         String memberName = intent.getExtras().getString(ProfileListActivity.INTENT_SELECTED_MEMBER_NAME);
         
-        setContentView(R.layout.comment);
-        final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        ScrollView main = (ScrollView)findViewById(R.id.main);
-        main.addView(inflater.inflate(R.layout.activities_list, null));
-        view = main.findViewById(R.id.activity);
+        setContentView(R.layout.activities_list);
+        view = findViewById(R.id.activity);
         getWindow().setFeatureInt(android.view.Window.FEATURE_CUSTOM_TITLE, R.layout.title);
         TextView txtSubTitle = (TextView) findViewById(R.id.txtSubTitle);
         txtSubTitle.setText(memberName);
@@ -202,10 +201,24 @@ public class CommentsListActivity extends android.app.Activity {
                 }
 
                 if (feed != null) {
+                    mListView.setAdapter(new CommentsArrayAdapter(getApplicationContext(), feed));
+//                    
+//                    ListAdapter listAdapter = mListView.getAdapter();
+//                    if (listAdapter == null) {
+//                        return;
+//                    }
+//
+//                    int totalHeight = 0;
+//                    //listAdapter.getCount()返回数据项的数目
+//                    for (int i = 0, len = listAdapter.getCount(); i < len; i++) {
+//                           View listItem = listAdapter.getView(i, null, mListView);
+//                           listItem.measure(0, 0);  //计算子项View 的宽高
+//                           totalHeight += listItem.getMeasuredHeight();  //统计所有子项的总高度
+//                    }
                     RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mListView.getLayoutParams();
                     params.addRule(RelativeLayout.BELOW, R.id.shared);
+//                    params.height = totalHeight + (mListView.getDividerHeight() * (listAdapter.getCount() - 1));
                     mListView.setLayoutParams(params);
-                    mListView.setAdapter(new CommentsArrayAdapter(getApplicationContext(), feed));
                 }
             }
             
