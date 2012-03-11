@@ -14,4 +14,7 @@
     <string name="ske48">SKE48</string>
     <string name="nmb48">NMB48</string>
     <string name="hkt48">HKT48</string>
+    
+    <!-- Error Message -->
+    <string name="init_table_error">初期化缓存失败。</string>
 </resources>

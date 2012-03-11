@@ -14,14 +14,14 @@ import android.widget.TextView;
 import com.akb48plus.common.Const;
 import com.akb48plus.common.Utils;
 import com.akb48plus.common.image.ImageLoader;
+import com.akb48plus.common.model.Model;
+import com.akb48plus.common.model.People;
 
-import com.google.api.services.plus.model.Person;
-
-public class MemberListAdapter extends ArrayAdapter<Person> {
+public class MemberListAdapter extends ArrayAdapter<Model> {
     private static final String TAG = MemberListAdapter.class.getName();
     public ImageLoader imageLoader;
 
-    public MemberListAdapter(Context ctx, List<Person> people) {
+    public MemberListAdapter(Context ctx, List<Model> people) {
         super(ctx, android.R.layout.simple_spinner_item, people);
         setDropDownViewResource(R.layout.profile_list);
         imageLoader=new ImageLoader(ctx);
@@ -40,7 +40,7 @@ public class MemberListAdapter extends ArrayAdapter<Person> {
             view = layoutInflater.inflate(R.layout.profile_list, parent, false);
         }
 
-        Person member = getItem(position);
+        People member = (People) getItem(position);
         if (member != null) {
             Log.d(TAG, "Profile name: " + member.getDisplayName());
             TextView textView = (TextView) view.findViewById(R.id.txtProfileName);
@@ -54,9 +54,9 @@ public class MemberListAdapter extends ArrayAdapter<Person> {
             // Uri uri = Uri.parse(member.getImage().getUrl());
             ImageView imageview = (ImageView) view.findViewById(R.id.imgProfilePhoto);
             if (imageview != null) {
-                Log.d(TAG, "Profile photo: " + member.getImage().getUrl());
+                Log.d(TAG, "Profile photo: " + member.getProfileUrl());
                 imageLoader.displayImage(
-                        Utils.changePhotoSizeInUrl(member.getImage().getUrl(), Const.PHOTO_SIZE),
+                        Utils.changePhotoSizeInUrl(member.getProfileUrl(), Const.PHOTO_SIZE),
                         imageview);
             }
         }

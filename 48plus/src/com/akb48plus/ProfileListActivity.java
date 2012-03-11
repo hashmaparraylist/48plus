@@ -18,8 +18,12 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.akb48plus.common.Const;
+import com.akb48plus.common.cache.PeopleWrapper;
+import com.akb48plus.common.model.Model;
+import com.akb48plus.common.model.People;
 import com.google.api.services.plus.Plus;
 import com.google.api.services.plus.model.Person;
 import com.google.gson.Gson;
@@ -30,11 +34,12 @@ import com.google.gson.Gson;
  *
  */
 public class ProfileListActivity extends android.app.Activity {
-    
-    private ListView mListView;
-    public final static String TAG = ProfileListActivity.class.getName();
     public static final String INTENT_SELECTED_MEMBER_ID = "INTENT_SELECTED_MEMBER_ID";
     public static final String INTENT_SELECTED_MEMBER_NAME = "INTENT_SELECTED_MEMBER_NAME";
+    
+    private ListView mListView;
+    private PeopleWrapper wrapper;
+    private final static String TAG = ProfileListActivity.class.getName();
     
 
     /** Called when the activity is first created. */
@@ -56,6 +61,18 @@ public class ProfileListActivity extends android.app.Activity {
         setContentView(R.layout.profile_list);
         mListView = (ListView) findViewById(R.id.profileList);
         ((ImageView) findViewById(R.id.imgProfilePhoto)).setVisibility(ImageView.INVISIBLE);
+        try {
+            wrapper = new PeopleWrapper(this);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+            Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.init_table_error),
+                    Toast.LENGTH_SHORT).show();
+            this.finish();
+        }
+        
+        List<Model> list = wrapper.list();
+        
+        mListView.setAdapter(new MemberListAdapter(getApplicationContext(), list));
         
         mListView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -74,31 +91,51 @@ public class ProfileListActivity extends android.app.Activity {
             }
         });
         
-        AsyncTask<String, Void, List<Person>> task = new AsyncTask<String, Void, List<Person>>() {
+        AsyncTask<String, Void, List<People>> task = new AsyncTask<String, Void, List<People>>() {
             @Override
-            protected List<Person> doInBackground(String... params) {
-                try {
-                    Plus plus = new PlusWrap(ProfileListActivity.this).get();
-                    List<Person> profileList = new ArrayList<Person>();
-                    
-                    for (String member : params) {
-                        Log.d(TAG, "Profile id=" + member + " get.");
-                        profileList.add(plus.people().get(member).execute());
+            protected List<People> doInBackground(String... params) {
+               
+                Plus plus = new PlusWrap(ProfileListActivity.this).get();
+                List<People> profileList = new ArrayList<People>();
+                
+                for (String member : params) {
+                    Log.d(TAG, "Profile id=" + member + " get.");
+                    People people = new People();
+                    Person person;
+                    try {
+                        person = plus.people().get(member).execute();
+                    } catch (IOException e) {
+                        Log.e(TAG, e.getMessage());
+                        continue;
                     }
-
-                    return profileList;
-
-                } catch (IOException e) {
-                    Log.e(TAG, "Unable to list recommended people for user: "
-                            + params[0], e);
+                    people.setId(person.getId());
+                    people.setDisplayName(person.getDisplayName());
+                    people.setProfileUrl(person.getImage().getUrl());
+                    
+                    try {
+                        if (!wrapper.exist(people)) {
+                            wrapper.add(people);
+                            profileList.add(people);
+                        } else {
+                            wrapper.update(people);
+                        }
+                    } catch (Exception e) {
+                        Log.e(TAG, e.getMessage());
+                        continue;
+                    } 
                 }
-                return null;
+
+                return profileList;
             }
 
             @Override
-            protected void onPostExecute(List<Person> feed) {
-                if (feed != null) {
-                    mListView.setAdapter(new MemberListAdapter(getApplicationContext(), feed));
+            protected void onPostExecute(List<People> feed) {
+                if (feed == null) return;
+                if (feed.size() < 1) return;
+                
+                MemberListAdapter listAdapter = (MemberListAdapter) mListView.getAdapter();
+                for (People people : feed) {
+                    listAdapter.add(people);
                 }
             }
         };

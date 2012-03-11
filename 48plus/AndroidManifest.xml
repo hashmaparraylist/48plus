@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
-    <application android:name="AKB48Application"
+    <application android:name=".AKB48Application"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
         <activity
@@ -25,7 +25,7 @@
         <activity android:name=".ProfileListActivity" />
         <activity android:name=".ActivitiesListActivity" android:theme="@style/title"/>
         <activity android:name=".CommentsListActivity" android:theme="@style/title"/>
-        <activity android:name="com.akb48plus.common.auth.AccountListActivity" android:theme="@style/title" />
+        <activity android:name=".common.auth.AccountListActivity" android:theme="@style/title" />
     </application>
 
 </manifest>
