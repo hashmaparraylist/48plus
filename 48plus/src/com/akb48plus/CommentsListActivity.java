@@ -46,7 +46,6 @@ public class CommentsListActivity extends android.app.Activity {
     private static final String TAG = CommentsListActivity.class.getName();
     public ImageLoader imageLoader;
     private ListView mListView;
-    private View view;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
