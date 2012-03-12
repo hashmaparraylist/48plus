@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
@@ -7,7 +6,6 @@
     android:id="@+id/activity"
     android:fillViewport="true"
     style="@style/list" >
-    
     <TextView
         android:id="@+id/txtActivityId"
         style="@style/TextView.invisibility" />
@@ -16,7 +14,7 @@
         style="@style/PlusImage.People"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true" 
-        android:visibility="gone"
+        android:visibility="invisible"
         android:contentDescription="@string/akb48"/>
     <TextView
         android:id="@+id/txtDisplayName"
@@ -35,6 +33,14 @@
         android:layout_toRightOf="@id/imgProfilePhoto"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
+    <!--
+    <TextView
+        android:id="@+id/txtBlankLine1"
+        style="@style/TextView.Provider"
+        android:text="@string/space"
+        android:layout_toRightOf="@id/imgProfilePhoto"
+        android:layout_below="@id/txtUpdDateTime"
+        android:layout_centerHorizontal="true" />-->
     <TextView
         android:id="@+id/txtContent"
         style="@style/TextView.Activity"
@@ -46,13 +52,13 @@
         style="@style/PlusImage.Attachment"
         android:layout_toRightOf="@id/imgProfilePhoto"
         android:layout_below="@id/txtContent"
-        android:visibility="gone"
+        android:visibility="invisible"
         android:contentDescription="@string/akb48"/>
     <RelativeLayout 
         android:id="@+id/shared"
         android:layout_toRightOf="@id/imgProfilePhoto"
         android:layout_below="@id/imgAttach"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_width="fill_parent"
         android:background="#f2f2f2"
         android:visibility="gone"
@@ -87,5 +93,5 @@
     <ListView
         android:id="@+id/activityList"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"/>
+        android:layout_height="wrap_content"/>
 </RelativeLayout>

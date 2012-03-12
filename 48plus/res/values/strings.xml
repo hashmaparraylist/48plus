@@ -2,6 +2,7 @@
 <resources>
     <!-- Global String -->
     <string name="app_name">48 Plus</string>
+    <string name="space"> </string>
     
     <!-- Account List Activity -->
     <string name="account_list_sub_title">请选择Google帐号</string>

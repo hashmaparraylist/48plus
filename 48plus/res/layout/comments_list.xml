@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     style="@style/comments" >
-
     <TextView
         android:id="@+id/txtDisplayName"
         style="@style/TextView.Commenter"
     />
     <TextView
         android:id="@+id/txtContent"
+        android:layout_below="@id/txtDisplayName"
         style="@style/TextView.Comment"
     />
-</LinearLayout>
+    <ListView
+        android:id="@+id/activityList"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"/>
+</RelativeLayout>

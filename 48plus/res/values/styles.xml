@@ -93,6 +93,8 @@
     
     <style name="comments">
         <item name="android:background">#e2e2e2</item>
+        <item name="android:divider">#0b0b0b</item>
+        <item name="android:dividerHeight">1px</item>
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">fill_parent</item>
     </style>
