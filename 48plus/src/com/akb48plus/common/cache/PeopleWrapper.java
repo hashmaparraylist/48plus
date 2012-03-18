@@ -42,4 +42,8 @@ public class PeopleWrapper extends ModelWrapper {
         return new People();
     }
 
+    @Override
+    protected String getAdditionalKey() {
+        return "";
+    }
 }

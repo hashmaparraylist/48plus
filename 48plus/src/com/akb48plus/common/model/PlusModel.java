@@ -32,9 +32,6 @@ public abstract class PlusModel implements Model {
         return id;
     }
 
-    /* (non-Javadoc)
-     * @see com.akb48plus.common.model.Model#setId(java.lang.String)
-     */
     @Override
     public void setId(String id) {
         this.id = id;
@@ -46,6 +43,13 @@ public abstract class PlusModel implements Model {
     
     public void set(String key, String value) {
         this.item.put(key, value);
+    }
+    
+    public String get(String key) {
+        if (!this.item.containsKey(key)) {
+            return "";
+        }
+        return this.item.get(key);
     }
     
     protected abstract void setupColumns();

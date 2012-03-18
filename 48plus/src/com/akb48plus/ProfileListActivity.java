@@ -69,8 +69,14 @@ public class ProfileListActivity extends android.app.Activity {
                     Toast.LENGTH_SHORT).show();
             this.finish();
         }
+
+        List<Model> list = new ArrayList<Model>();
         
-        List<Model> list = wrapper.list();
+        for (int i = 0; i < memberList.length; i++) {
+            String string = memberList[i];
+            List<Model> target = wrapper.get(string);
+            list.add(target.get(0));
+        }
         
         mListView.setAdapter(new MemberListAdapter(getApplicationContext(), list));
         

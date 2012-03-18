@@ -18,16 +18,26 @@ import android.util.Log;
 import com.akb48plus.common.model.Model;
 
 /**
- * @author Thinkpad
- *
+ * @author sebastianqu
  */
 public abstract class ModelWrapper {
     
     private static String TAG = ModelWrapper.class.getName();
+    /**
+     * Local SQLite DataBase Name
+     */
     public static String DB_NAME = "48plus";
+    /**
+     * DataBase Helper
+     */
     protected SQLiteDatabase dbHelper = null;
+    /**
+     * Android Context
+     */
+    protected Context context;
     
     public ModelWrapper(Context ctx) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+        this.context = ctx;
         dbHelper = ctx.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null);
         
         Cursor cursor = dbHelper.rawQuery(
@@ -40,11 +50,16 @@ public abstract class ModelWrapper {
         }
     }
     
-    public Model get(String id) {
+    /**
+     * 通过ID获得获得G+对象
+     * @param id 对象ID
+     * @return 对象链表
+     */
+    public List<Model> get(String id) {
         Model model = null;
         Cursor cursor = dbHelper.rawQuery(
                 "select * from "+ getTableName()+ " where id = '" + id + "'", null);
-        
+        List<Model> list = new ArrayList<Model>();
         while (cursor.moveToNext()) {
             Map<String, String> bean = new HashMap<String, String>();
             String colName[] = cursor.getColumnNames();
@@ -53,13 +68,22 @@ public abstract class ModelWrapper {
                 bean.put(col, value);
             }
             model = parseModel(bean);
+            list.add(model);
         }
-        return model;
+        return list;
     }
     
-    public List<Model> list() {
+    /**
+     * 通过指定条件获取G+对象
+     * @param condition 条件
+     * @return G+对象列表
+     */
+    public List<Model> getByCondition(String condition) {
         List<Model> list = new ArrayList<Model>();
-        Cursor cursor = dbHelper.rawQuery("select * from " + getTableName(), null);
+        String sql = "select * from " + getTableName();
+        if ((null != condition) && !"".equals(condition))
+            sql += " where " + condition;
+        Cursor cursor = dbHelper.rawQuery(sql, null);
         while (cursor.moveToNext()) {
             Map<String, String> bean = new HashMap<String, String>();
             String colName[] = cursor.getColumnNames();
@@ -71,6 +95,44 @@ public abstract class ModelWrapper {
             list.add(model);
         }
         return list;
+    }
+    
+    /**
+     * 通过附加Key来获取G+对象
+     * @param model 存放附加的Key的G+对象接口
+     * @return G+对象接口
+     */
+    public List<Model> getByKey(Model model) {
+        String keys[] = getAdditionalKey().split(",");
+        
+        StringBuffer sb = new StringBuffer();
+        if (!"".equals(model.getId())) {
+            sb.append("id = '");
+            sb.append(model.getId());
+            sb.append("' ");
+        } else {
+            sb.append("1=1");
+        }
+       
+        for (String key : keys) {
+            String value = model.getItem().get(key);
+            sb.append(" and ");
+            sb.append(key);
+            sb.append(" ='");
+            sb.append(value);
+            sb.append("'");
+        }
+        
+        
+        return getByCondition(sb.toString());
+    }
+    
+    /** 
+     * 获取G+对象
+     * @return G+对象列表
+     */
+    public List<Model> list() {
+        return getByCondition(null);
     }
     
     public void add(Model model) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
@@ -160,12 +222,17 @@ public abstract class ModelWrapper {
             sb.append(key);
             sb.append(" text, ");
         }
-        sb.append("primary key(id asc))");
+        sb.append("primary key(id");
+        if (!"".equals(getAdditionalKey())) {
+            sb.append(",");
+            sb.append(getAdditionalKey());
+        }
+        sb.append(" asc))");
         Log.d(TAG, sb.toString());
         dbHelper.execSQL(sb.toString());
     }
     
     public abstract String getTableName();
     protected abstract Model getModelInstance();
-    
+    protected abstract String getAdditionalKey();
 }

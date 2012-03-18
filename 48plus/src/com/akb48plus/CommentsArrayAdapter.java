@@ -13,15 +13,16 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.google.api.services.plus.model.Comment;
+import com.akb48plus.common.model.Comment;
+import com.akb48plus.common.model.Model;
 
 /**
  * @author QuSheng
  *
  */
-public class CommentsArrayAdapter extends ArrayAdapter<Comment> {
+public class CommentsArrayAdapter extends ArrayAdapter<Model> {
 
-    public CommentsArrayAdapter(Context context, List<Comment> list) {
+    public CommentsArrayAdapter(Context context, List<Model> list) {
         super(context, android.R.layout.simple_spinner_item, list);
         setDropDownViewResource(R.layout.comments_list);
     }
@@ -39,7 +40,7 @@ public class CommentsArrayAdapter extends ArrayAdapter<Comment> {
             view = inflater.inflate(R.layout.comments_list, parent, false);
         }
         
-        Comment comment =  getItem(position);
+        Comment comment = (Comment) getItem(position);
         if (null == comment) {
             return view;
         }
@@ -47,8 +48,8 @@ public class CommentsArrayAdapter extends ArrayAdapter<Comment> {
         TextView txtDisplayName = (TextView) view.findViewById(R.id.txtDisplayName);
         TextView txtContent = (TextView) view.findViewById(R.id.txtContent);
         
-        txtDisplayName.setText(comment.getActor().getDisplayName());
-        txtContent.setText(Html.fromHtml(comment.getPlusObject().getContent()));
+        txtDisplayName.setText(comment.getDisplayName());
+        txtContent.setText(Html.fromHtml(comment.getContent()));
         return view;
     }
 

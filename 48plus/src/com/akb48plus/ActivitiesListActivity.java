@@ -4,6 +4,7 @@
 package com.akb48plus;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
@@ -15,7 +16,11 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.akb48plus.common.cache.PostWrapper;
+import com.akb48plus.common.model.Model;
+import com.akb48plus.common.model.Post;
 import com.google.api.services.plus.Plus;
 import com.google.api.services.plus.model.Activity;
 import com.google.api.services.plus.model.ActivityFeed;
@@ -29,6 +34,7 @@ public class ActivitiesListActivity extends android.app.Activity {
     private static String TAG = ActivitiesListActivity.class.getName();
     public static final String INTENT_SELECTED_ACTIVITY = "INTENT_SELECTED_ACTIVITY";
     private ListView mListView;
+    private PostWrapper wrapper;
     
     public void onCreate(Bundle savedState) {
         Log.d(TAG,"onCreate()");
@@ -49,7 +55,18 @@ public class ActivitiesListActivity extends android.app.Activity {
         TextView txtSubTitle = (TextView) findViewById(R.id.txtSubTitle);
         txtSubTitle.setText(memberName);
         
+        try {
+            wrapper = new PostWrapper(this);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+            Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.init_table_error),
+                    Toast.LENGTH_SHORT).show();
+            this.finish();
+        }
+        List<Model> activies = wrapper.getPostByPeople(memberId);
+        
         mListView = (ListView) findViewById(R.id.activityList);
+        mListView.setAdapter(new ActivityArrayAdapter(getApplicationContext(), activies));
         mListView.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
@@ -65,30 +82,48 @@ public class ActivitiesListActivity extends android.app.Activity {
             }
         });
         
-        AsyncTask<String, Void, List<Activity>> task = new AsyncTask<String, Void, List<Activity>>() {
+        AsyncTask<String, Void, List<Post>> task = new AsyncTask<String, Void, List<Post>>() {
             @Override
-            protected List<Activity> doInBackground(String... params) {
+            protected List<Post> doInBackground(String... params) {
+                List<Post> target = new ArrayList<Post>();
                 try {
                     Plus plus = new PlusWrap(ActivitiesListActivity.this).get();
                     Log.d(TAG, "Now Loading Plus.activity [Profile Id=" + params[0]);
                     Plus.Activities.List listActivities = plus.activities().list(params[0], "public");
-                    //listActivities.setMaxResults(Const.MAX_ACTIVITIES);
                     
                     ActivityFeed feed = listActivities.execute();
                     List<Activity> list = feed.getItems();
                     Log.d(TAG, "Now Loaded Plus.activity [Profile Id=" + params[0]);
-                    return list;
-
+                    
+                    for(Activity activity : list) {
+                        if (wrapper.containsKey(activity.getId())) {
+                            continue;
+                        }
+                        Post post = (Post) wrapper.parse(activity);
+                        try {
+                            wrapper.add(post);
+                        } catch (Exception e) {
+                            Log.e(TAG, e.getMessage());
+                            continue;
+                        }
+                        target.add(post);
+                        
+                    }
                 } catch (IOException e) {
                     Log.e(TAG, "Unable to list recommended people for user: " + params[0], e);
                 }
-                return null;
+                return target;
             }
             
             @Override
-            protected void onPostExecute(List<Activity> feed) {
-                if (feed != null) {
-                    mListView.setAdapter(new ActivityArrayAdapter(getApplicationContext(), feed));
+            protected void onPostExecute(List<Post> feed) {
+                if (feed == null) return;
+                if (feed.size() < 1) return;
+                
+                ActivityArrayAdapter adapter = (ActivityArrayAdapter)mListView.getAdapter();
+                
+                for (Post post : feed) {
+                    adapter.add(post);
                 }
             }
             
