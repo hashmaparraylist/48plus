@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.HeaderViewListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -147,7 +148,8 @@ public class CommentsListActivity extends android.app.Activity {
             @Override
             protected void onPostExecute(List<Model> feed) {
                 if ((feed != null) && (0 < feed.size())) {
-                    CommentsArrayAdapter adapter = (CommentsArrayAdapter) mListView.getAdapter();
+                    CommentsArrayAdapter adapter = (CommentsArrayAdapter) ((HeaderViewListAdapter) mListView
+                            .getAdapter()).getWrappedAdapter();
                     for (Model model : feed) {
                         adapter.add(model);
                     }

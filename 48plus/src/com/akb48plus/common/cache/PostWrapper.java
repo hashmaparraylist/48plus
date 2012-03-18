@@ -88,7 +88,7 @@ public class PostWrapper extends ModelWrapper {
         ImageView imageAttach = (ImageView) view.findViewById(R.id.imgAttach);
         imageAttach.setVisibility(View.GONE);
 
-        txtContent.setText(Html.fromHtml(post.get("content")));
+        txtContent.setText(Html.fromHtml(post.get("object_content")));
         
         String verb = post.get("verb");
         

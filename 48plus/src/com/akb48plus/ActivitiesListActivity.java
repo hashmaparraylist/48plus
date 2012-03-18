@@ -120,7 +120,7 @@ public class ActivitiesListActivity extends android.app.Activity {
                 if (feed == null) return;
                 if (feed.size() < 1) return;
                 
-                ActivityArrayAdapter adapter = (ActivityArrayAdapter)mListView.getAdapter();
+                ActivityArrayAdapter adapter = (ActivityArrayAdapter)  mListView.getAdapter();
                 
                 for (Post post : feed) {
                     adapter.add(post);

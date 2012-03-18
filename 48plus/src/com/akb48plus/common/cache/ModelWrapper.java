@@ -38,7 +38,7 @@ public abstract class ModelWrapper {
     
     public ModelWrapper(Context ctx) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         this.context = ctx;
-        dbHelper = ctx.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null);
+        dbHelper = this.context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null);
         
         Cursor cursor = dbHelper.rawQuery(
                 "select * from sqlite_master where type='table'"
@@ -48,6 +48,8 @@ public abstract class ModelWrapper {
             Log.d(TAG, "Stand By Table");
             createTable();
         }
+        cursor.close();
+        dbHelper.close();
     }
     
     /**
@@ -57,6 +59,7 @@ public abstract class ModelWrapper {
      */
     public List<Model> get(String id) {
         Model model = null;
+        dbHelper = this.context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null);
         Cursor cursor = dbHelper.rawQuery(
                 "select * from "+ getTableName()+ " where id = '" + id + "'", null);
         List<Model> list = new ArrayList<Model>();
@@ -70,6 +73,8 @@ public abstract class ModelWrapper {
             model = parseModel(bean);
             list.add(model);
         }
+        cursor.close();
+        dbHelper.close();
         return list;
     }
     
@@ -83,6 +88,7 @@ public abstract class ModelWrapper {
         String sql = "select * from " + getTableName();
         if ((null != condition) && !"".equals(condition))
             sql += " where " + condition;
+        dbHelper = this.context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null);
         Cursor cursor = dbHelper.rawQuery(sql, null);
         while (cursor.moveToNext()) {
             Map<String, String> bean = new HashMap<String, String>();
@@ -94,6 +100,8 @@ public abstract class ModelWrapper {
             Model model = parseModel(bean);
             list.add(model);
         }
+        cursor.close();
+        dbHelper.close();
         return list;
     }
     
@@ -122,7 +130,6 @@ public abstract class ModelWrapper {
             sb.append(value);
             sb.append("'");
         }
-        
         
         return getByCondition(sb.toString());
     }
@@ -161,7 +168,9 @@ public abstract class ModelWrapper {
         sb.append(sbValue);
         sb.append(" )");
         Log.d(TAG, sb.toString());
+        dbHelper = this.context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null);
         dbHelper.execSQL(sb.toString());
+        dbHelper.close();
     }
     
     public void update(Model model) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
@@ -183,17 +192,24 @@ public abstract class ModelWrapper {
         sb.append(model.getId());
         sb.append("'");
         Log.d(TAG, sb.toString());
-        dbHelper.execSQL(sb.toString());    
+        dbHelper = this.context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null);
+        dbHelper.execSQL(sb.toString());
+        dbHelper.close();
     }
     
     public boolean containsKey(String id) {
+        boolean result = true;
+        dbHelper = this.context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null);
         Cursor cursor = dbHelper.rawQuery(
                 "select * from "+ getTableName()+ " where id = '" + id + "'", null);
         
+        
         if (cursor.getCount() < 1) {
-            return false;
+            result = false;
         }
-        return true;
+        cursor.close();
+        dbHelper.close();
+        return result;
     }
     
     public boolean exist(Model model) {
@@ -229,7 +245,9 @@ public abstract class ModelWrapper {
         }
         sb.append(" asc))");
         Log.d(TAG, sb.toString());
+        dbHelper = this.context.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null);
         dbHelper.execSQL(sb.toString());
+        dbHelper.close();
     }
     
     public abstract String getTableName();
