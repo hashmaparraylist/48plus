@@ -1,5 +1,6 @@
 package com.akb48plus;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import android.content.Context;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.akb48plus.common.Const;
 import com.akb48plus.common.Utils;
+import com.akb48plus.common.cache.PeopleWrapper;
 import com.akb48plus.common.image.ImageLoader;
 import com.akb48plus.common.model.Model;
 import com.akb48plus.common.model.People;
@@ -20,11 +22,13 @@ import com.akb48plus.common.model.People;
 public class MemberListAdapter extends ArrayAdapter<Model> {
     private static final String TAG = MemberListAdapter.class.getName();
     public ImageLoader imageLoader;
+    private Context context;
 
     public MemberListAdapter(Context ctx, List<Model> people) {
         super(ctx, android.R.layout.simple_spinner_item, people);
         setDropDownViewResource(R.layout.profile_list);
         imageLoader=new ImageLoader(ctx);
+        this.context = ctx;
     }
 
     @Override
@@ -55,6 +59,17 @@ public class MemberListAdapter extends ArrayAdapter<Model> {
             ImageView imageview = (ImageView) view.findViewById(R.id.imgProfilePhoto);
             if (imageview != null) {
                 Log.d(TAG, "Profile photo: " + member.getProfileUrl());
+                String url = member.getProfileUrl();
+                if ("".equals(url)) {
+                    try {
+                        PeopleWrapper wrapper = new PeopleWrapper(this.context);
+                        List<Model> list = wrapper.get(member.getId());
+                        Model model = list.get(0);
+                        url = ((People) model).getProfileUrl();
+                    } catch (Exception e) {
+                        Log.e(TAG, e.getMessage());
+                    }
+                }
                 imageLoader.displayImage(
                         Utils.changePhotoSizeInUrl(member.getProfileUrl(), Const.PHOTO_SIZE),
                         imageview);
