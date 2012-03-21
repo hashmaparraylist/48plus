@@ -170,6 +170,11 @@ public class ImageLoader {
         }
     }
 
+    /**
+     * 判读请求的URL，在Memory里面是否存在
+     * @param photoToLoad
+     * @return
+     */
     boolean imageViewReused(PhotoToLoad photoToLoad) {
         String tag = imageViews.get(photoToLoad.imageView);
         if (tag == null || !tag.equals(photoToLoad.url))

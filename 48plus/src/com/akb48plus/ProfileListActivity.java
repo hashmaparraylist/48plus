@@ -106,7 +106,14 @@ public class ProfileListActivity extends android.app.Activity {
                 
                 for (String member : params) {
                     Log.d(TAG, "Profile id=" + member + " get.");
+                    List<Model> cacheList = wrapper.get(member);
                     People people = new People();
+                    if (cacheList.size() > 0 ) {
+                        people = (People) cacheList.get(0);
+                    }
+                    if (!"".equals(people.getProfileUrl())) {
+                        continue;
+                    }
                     Person person;
                     try {
                         person = plus.people().get(member).execute();
