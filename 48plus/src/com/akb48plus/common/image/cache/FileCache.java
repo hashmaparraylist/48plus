@@ -37,6 +37,14 @@ public class FileCache {
         return f;
 
     }
+    
+    public void remove(String url) {
+        String filename = URLEncoder.encode(url) + JPEG_EXTE;
+        File f = new File(cacheDir, filename);
+        if (f.exists() && f.isFile()) {
+            f.delete();
+        }
+    }
 
     public void clear() {
         File[] files = cacheDir.listFiles();

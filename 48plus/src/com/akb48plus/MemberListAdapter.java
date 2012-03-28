@@ -1,6 +1,5 @@
 package com.akb48plus;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import android.content.Context;

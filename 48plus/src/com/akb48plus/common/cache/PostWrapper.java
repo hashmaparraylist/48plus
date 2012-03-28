@@ -192,7 +192,7 @@ public class PostWrapper extends ModelWrapper {
                 } else if (Const.ATTACH_TYPE_PHOTO.equals(type)) {
                     post.set("shared_attach_url", attachment.getFullImage().getUrl());
                 }
-                post.set("shared_attach_content", content);
+                post.set("shared_content", content);
             }
         }
         

@@ -10,6 +10,9 @@
     <!-- Account List Activity -->
     <string name="main_sub_title">请选择成员</string>
     
+    <!-- Profile List Activity -->
+    <string name="dialog_title">菜单</string>
+    
     <!-- Group Name -->
     <string name="akb48">AKB48</string>
     <string name="ske48">SKE48</string>
