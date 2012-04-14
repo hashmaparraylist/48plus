@@ -29,23 +29,30 @@ public class MainActivity extends android.app.TabActivity implements OnCheckedCh
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "MainActivity.onCreate");
+        Log.d(TAG, "MainActivity.onCreate hashCode=" + this.toString());
         super.onCreate(savedInstanceState);
         requestWindowFeature(android.view.Window.FEATURE_CUSTOM_TITLE);
-
-        final Intent intent = getIntent();
-        if (intent == null || !intent.hasExtra("token")) {
-            AuthUtils.refreshAuthToken(this);
-            return;
-        }
-
+        
         setContentView(R.layout.main);
         getWindow().setFeatureInt(android.view.Window.FEATURE_CUSTOM_TITLE, R.layout.title);
         TextView txtSubTitle = (TextView) findViewById(R.id.txtSubTitle);
         txtSubTitle.setText(R.string.main_sub_title);
        
         setRadioOnCheckedChangedEvent();
-
+        
+        final Intent intent = getIntent();
+        Log.d(TAG, "get app_token");
+        if (intent == null || !intent.hasExtra("token")) {
+            Log.d(TAG, "refresh app_token");
+            AuthUtils.refreshAuthToken(this);
+            return;
+        }
+    }
+    
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart");
         // Init Intent
         akb48intent = new Intent(this, ProfileListActivity.class);
         akb48intent.putExtra(INTENT_GROUP_SELECTED, Const.PREF_AKB_LIST_NAME);
@@ -55,7 +62,6 @@ public class MainActivity extends android.app.TabActivity implements OnCheckedCh
         nmb48intent.putExtra(INTENT_GROUP_SELECTED, Const.PREF_NMB_LIST_NAME);
         hkt48intent = new Intent(this, ProfileListActivity.class);
         hkt48intent.putExtra(INTENT_GROUP_SELECTED, Const.PREF_HKT_LIST_NAME);
-        
         
         TabHost localTabHost = getTabHost();
         
@@ -77,7 +83,7 @@ public class MainActivity extends android.app.TabActivity implements OnCheckedCh
                 .setIndicator(getString(R.string.hkt48))
                 .setContent(hkt48intent));
     }
-    
+
     /**
      * 
      */

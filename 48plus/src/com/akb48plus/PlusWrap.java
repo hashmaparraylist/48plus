@@ -48,7 +48,7 @@ public class PlusWrap {
                             @Override
                             public void initialize(JsonHttpRequest request) {
                                 PlusRequest plusRequest = (PlusRequest) request;
-                                plusRequest.setKey("AIzaSyBjeUX9A35iPjNk8DhjWOw41iOZ82aTl-4");      // OAuth 2.0's Token
+                                plusRequest.setKey("AIzaSyBjeUX9A35iPjNk8DhjWOw41iOZ82aTl-4"); // OAuth 2.0's API Key
                             }
                         }).build();
     }

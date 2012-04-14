@@ -37,11 +37,13 @@ public class AuthUtils {
         final Intent callback = new Intent(context, context.getClass());
 
         if (null == account) {
+            Log.d(TAG, "account hasn't selected");
             // Google Account is not exist
             Intent accountListIntent = new Intent(context, AccountListActivity.class);
             accountListIntent.putExtra("callback", callback);
             context.startActivity(accountListIntent);
         } else {
+            Log.d(TAG, "account has selected");
             final AccountManagerCallback<Bundle> cb = new AccountManagerCallback<Bundle>() {
                 public void run(AccountManagerFuture<Bundle> future) {
                     try {
@@ -51,6 +53,8 @@ public class AuthUtils {
                         final Intent authIntent = result.getParcelable(AccountManager.KEY_INTENT);
 
                         if (accountName != null && authToken != null) {
+                            Log.d(TAG, "accountName=" + accountName);
+                            Log.d(TAG, "new authToken=" + authToken);
                             final SharedPreferences.Editor editor = settings.edit();
                             editor.putString(PREF_TOKEN, authToken);
                             editor.commit();
@@ -66,6 +70,7 @@ public class AuthUtils {
                     }
                 }
             };
+            Log.d(TAG, "invalidate old AuthToken=" + accessToken);
             manager.invalidateAuthToken(accessToken);
             AccountManager.get(context).getAuthToken(account, PLUS_ME_SCOPE, true, cb, null);
         }
