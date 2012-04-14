@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="profile_memmber_long_click">
+        <item>刷新成员头像</item>
+    </string-array>
+</resources>
